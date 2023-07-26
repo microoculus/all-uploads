@@ -56,6 +56,7 @@ class AllUploads{
     echo "<script src=".URL::asset('vendor/all-uploads/kartik-v-bootstrap-fileinput/js/plugins/sortable.min.js'). " type='text/javascript'></script>".PHP_EOL;
     echo "<script src=".URL::asset('vendor/all-uploads/kartik-v-bootstrap-fileinput/js/fileinput.min.js'). " type='text/javascript'></script>".PHP_EOL;
     echo "<script src=".URL::asset('vendor/all-uploads/kartik-v-bootstrap-fileinput/js/locales/LANG.js'). " type='text/javascript'></script>".PHP_EOL;
+    echo "<script src=".URL::asset('vendor/all-uploads/kartik-v-bootstrap-fileinput/themes/bs5/theme.js'). " type='text/javascript'></script>".PHP_EOL;
 
     echo $this->render();
 
@@ -70,6 +71,8 @@ class AllUploads{
 
    public function Style($args = []){
     echo "<link href=".URL::asset('vendor/all-uploads/kartik-v-bootstrap-fileinput/css/fileinput.min.css'). " rel='stylesheet'  type='text/css' />".PHP_EOL;
+    echo "<link href=".URL::asset('vendor/all-uploads/bootstrap-icons/font/bootstrap-icons.css'). " rel='stylesheet'  type='text/css' />".PHP_EOL;
+
     if (!empty($args) && array_key_exists("fs",$args) && $args['fs']){
         echo "<link href=". URL::asset('vendor/all-uploads/fontawesome/css/all.css'). " rel='stylesheet'  type='text/css' />".PHP_EOL;
     }

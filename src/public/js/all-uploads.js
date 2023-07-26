@@ -17,6 +17,7 @@ $(function() {
     }
    uploadZoneInit();
    allUploadedMediaLoadInit();
+   mediaDetailsModalShowInit();
 
 });
 
@@ -28,8 +29,9 @@ $(function() {
             }
             if(element){
                 $(element).fileinput({
+                    theme: "bs5",
                     browseOnZoneClick: true,
-                    uploadUrl: window.all_uploads.allUploadsConf('media_upload_ulr'),
+                    uploadUrl: window.all_uploads.allUploadsConf('media_upload_url'),
                     uploadAsync:false,
                     showClose :false,
                     uploadExtraData:extraData,
@@ -130,6 +132,38 @@ $(function() {
             });
         }
     }
+
+
+    var mediaDetailsModalShowInit =  function(){
+        if(document.querySelector("#remote-uploader-modal")){
+
+            $('#remote-uploader-modal').on('shown.bs.modal', function (e) {
+                let modalDom = e.target;
+                let deatilsDom = e.relatedTarget;
+                $(modalDom).find(".uploaded-at").html($(deatilsDom).attr('data-details-uploaded-at'))
+                .end().find(".file-name").html($(deatilsDom).attr('data-details-file-name'))
+                .end().find(".file-type").html($(deatilsDom).attr('data-details-file-type'))
+                .end().find(".file-size").html($(deatilsDom).attr('data-details-file-size'))
+                .end().find(".file-url").val($(deatilsDom).attr('data-details-file-url'))
+                .end().find(".feature-image").attr("src", $(deatilsDom).attr('href'))
+    
+                $(document).on('click', ".url-copy" , function() {
+                    navigator.clipboard.writeText($('.file-url').val());
+                });
+                
+                }).on('hide.bs.modal', function (e) {
+                    let modalDom = e.target;
+                    $(modalDom).find(".uploaded-at").html("")
+                    .end().find(".file-name").html("")
+                    .end().find(".file-type").html("")
+                    .end().find(".file-size").html("")
+                    .end().find(".file-url").val("")
+                    .end().find(".feature-image").attr("src", "")
+            });
+        }
+       
+   
+    };
 
 
     

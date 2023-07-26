@@ -3,7 +3,7 @@
 <div class="all-uploads-block">
 	<div class="remote-uploader-header mt-4">
 		<div class="header-left">
-			<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#media-upload-ful-screen-modal"><i class="fas fa-upload"></i> Upload</button>
+			<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#media-upload-ful-screen-modal"><i class="bi bi-upload"></i> Upload</button>
 		</div>
 		<div class="header-right">
 			<div class="btn-group ms-1">

@@ -200,7 +200,7 @@
                          id: '',
                          class:"float-right fs-5 ru-cursor-pointer ru-remove-media",
                        });
-                         span.html('<i class="fa-solid fa-trash-can"></i> ')
+                         span.html('<i class="bi bi-trash-fill"></i> ')
                         let imageBlockDiv = $('<div />', { 
                             id: '',
                             class:"ru-image-block",
@@ -262,6 +262,7 @@
                      });
                      dropZoneInput.appendTo($("#zone-of-ru-uploads"));
                      $(dropZoneInput).fileinput({
+                        theme: "bs5",
                         browseOnZoneClick: true,
                         uploadUrl: ajaxUploaddUrl,
                         uploadAsync:false,
@@ -402,7 +403,7 @@
                             id: '',
                             class:"float-right fs-5 ru-cursor-pointer ru-remove-media",
                             });
-                            span.html('<i class="fa-solid fa-trash-can"></i>')
+                            span.html('<i class="bi bi-trash-fill"></i>')
                             span.appendTo($(imageBlockDiv));
 
                         ajaxRemoveMediaInit();
@@ -445,7 +446,7 @@
                             id: '',
                             class:"float-right fs-5 ru-cursor-pointer ru-remove-media",
                             });
-                            span.html('<i class="fa-solid fa-trash-can"></i>')
+                            span.html('<i class="bi bi-trash-fill"></i>')
                             span.appendTo($(imageBlockDiv));
 
                         // removeMediaInit();
