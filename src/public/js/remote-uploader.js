@@ -1,5 +1,8 @@
+    if (!window.jQuery) {
+        throw new Error("Jquery not loaded");
+    }
     if(typeof window.all_uploads.allUploadsConf == undefined){
-        throw new Error("all up loads script error! Global function not defined");
+        throw new Error("Core script downloading error. script error! Global function not defined");
     }
    
    (function ( $ ) {
@@ -14,20 +17,14 @@
         }, options );
 
         var ajaxLoadUrl = window.all_uploads.allUploadsConf('media_remot_all_uploads_url');
-        var ajaxUploaddUrl =  window.all_uploads.allUploadsConf('media_upload_ulr');
+        var ajaxUploaddUrl =  window.all_uploads.allUploadsConf('media_upload_url');
         var initilaPreview = settings.initilaPreview;
         var mediaPreviewConfig = settings.mediaPreviewConfig;
         var threadId = null;
        
         return this.each(function() {
             var elem = $(this);
-     
-            // if(settings.multipleMedia){
-            //     $(elem).attr('name',   $(elem).attr('name')+"[]");
-            //     $(elem).addClass('ru-multiple');
-            // }
-
-
+            if ( elem.get(0).tagName.toLowerCase() !== 'input' && elem.get(0).getAttribute('type') !== 'hidden') {return false;}
             if(typeof elem.data('multiple_media') !== 'undefined'){
                 settings.multipleMedia = true;
                 $(elem).attr('name',   $(elem).attr('name')+"[]");
@@ -36,7 +33,6 @@
 
             formResetInit(elem);
             var createBrowsAndPreviewDom = function(){
-
                 let browseButtonConatiner =  $('<div />', {
                     id: '',
                    class:"ru-input-and-preview-dom"
@@ -57,11 +53,8 @@
                     id: '',
                    class:"ru-preview-img"
                  });
-
-                
                  $(browseButton).appendTo(browseButtonConatiner);
                  $(ruPreviewimageDiv).appendTo(browseButtonConatiner);
-
                 return browseButtonConatiner;
             }
 
@@ -76,12 +69,10 @@
 
 
             if(typeof elem.data('multiple_media') !== 'undefined' && initilaPreview && mediaPreviewConfig.length > 1  ){
-                initilaPrviewMultipleMediaInit(elem)
+                initilaPrviewMultipleMediaInit(elem, settings)
             }else if(typeof elem.data('multiple_media') === 'undefined' && initilaPreview && mediaPreviewConfig.length > 0){
-
                 initilaPrviewSingleMediaInit(elem, settings);
             }
-
             var modalBoxHandler = function(){
                 var modal = document.createElement('div');
                     modal.classList.add('modal', 'fade');
@@ -117,9 +108,13 @@
 
             var ajaxRequestHandler = function(){
                 var element = $("#remote-file-content-modal-body");
+                let extraData = {
+                    ...(all_uploads.allUploadsConf("user_id") && {'user_id': all_uploads.allUploadsConf("user_id")})
+                }
                 $.ajax({
                     url:  ajaxLoadUrl,
                     type: 'GET',
+                    data:extraData,
                     headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
                     beforeSend: function() {
                         // setting a timeout
@@ -136,9 +131,7 @@
                     }
                 });
             }
-
             var paginationRequestHndler = function(){
-             
                 if(document.querySelector(".custom-cursor-pagination ul.pagination li.page-item")){
                     $("li.page-item").each(function(){
                        if(!$(this).is(':disabled')) {
@@ -158,7 +151,6 @@
             }
 
             var setImageClickInit = function(){
-                
                 $("#remote-file-content-modal-body").find('img').each(function(){
                     $(this).on("click", function(event){
                         event.preventDefault();
@@ -182,11 +174,9 @@
                                 $('.use-this-media-button').show();
                                 $(closestDiv).addClass("media-selected");
                             }else{
-
                                     $(ruMultipleFirstInputs).val($(this).data('mediaid'));
                                     $(ruMultipleFirstInputs).attr("data-uuid", dataUuid);
-                                    $(closestDiv).addClass("media-selected");
-                                    
+                                    $(closestDiv).addClass("media-selected");        
                             }
                             
                         }else{
@@ -196,9 +186,7 @@
                             $(".media-selected").removeClass("media-selected");
                             $('.use-this-media-button').show();
                             $(closestDiv).addClass("media-selected");
-
                         }
-
                         let imagePreview=  $(ruDynamic).find('.ru-preview-img');
                         let img = $('<img />', { 
                          id: '',
@@ -213,17 +201,13 @@
                          class:"float-right fs-5 ru-cursor-pointer ru-remove-media",
                        });
                          span.html('<i class="fa-solid fa-trash-can"></i> ')
-
-
                         let imageBlockDiv = $('<div />', { 
                             id: '',
                             class:"ru-image-block",
                           });
-
                         //   imageBlockDiv.css({"float": "left"});
-                          imageBlockDiv.attr('data-uuid', dataUuid);
-                          imageBlockDiv.appendTo($(imagePreview));
-
+                        imageBlockDiv.attr('data-uuid', dataUuid);
+                        imageBlockDiv.appendTo($(imagePreview));
                         img.appendTo($(imageBlockDiv));
                         span.appendTo($(imageBlockDiv));
                         removeMediaInit();
@@ -231,12 +215,9 @@
                     })
                 });
             }
-
             var handleNameMultipleMediaOption = function(selector){
                 $(selector).attr('name',  $(selector).attr('name')+"[]")
             }
-          
-
            var removeMediaInit = function(){
             $(document).off("click").on("click", ".ru-remove-media", function(){
                 let imageBlockDiv = $(this).closest('.ru-image-block');
@@ -263,7 +244,14 @@
 
            }
 
+           
+
            var dropZoneTabInit = function(){
+            let extraData = {
+                '_token':document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                ...(all_uploads.allUploadsConf("user_id") && {'user_id': all_uploads.allUploadsConf("user_id")})
+            }
+           
                 if(document.querySelector("#zone-of-ru-uploads")){
                     let dropZoneInput = $('<input />', {
                         id: 'ru-dropzone-upload-media',
@@ -278,10 +266,7 @@
                         uploadUrl: ajaxUploaddUrl,
                         uploadAsync:false,
                         showClose :false,
-                        uploadExtraData:{
-                            '_token':document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            
-                        },
+                        uploadExtraData:extraData,
                     });
 
                     dropZoneInput.on('filebatchuploadsuccess', function(event, data) {
@@ -294,13 +279,10 @@
                     // });
                 }
            }
-
-
            var sortingInit = function(){
                 if(document.querySelector(".media-sort")){
                     $(".media-sort").find("[data-sortingOption]").each(function(){
                         $(this).off("click").on("click",function(){
-
                             ajaxLoadUrl = new URL(ajaxLoadUrl);
                             ajaxLoadUrl.searchParams.set("sorting", $(this).attr("data-sortingOption")); 
                             ajaxLoadUrl = ajaxLoadUrl.href;
@@ -309,67 +291,47 @@
                     });
                 }
            }
-          
            var activeTabOptimisation =  function(){
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
                 let target = $(e.target);
-               
                 if($(target).hasClass('list-of-ru-uploads')){
                     $('.media-sort-container').show();
                     if(document.querySelector(".media-selected")){
                         $('.use-this-media-button').show();
                     }
-                   
                 }
-
                 if($(target).hasClass('zone-of-ru-uploads')){
-                   
                     $('.media-sort-container').hide();
                     $('.use-this-media-button').hide();
                 }
               });
            };
-           
-         
-     
-        });
-
-       
-        
-       
+        }); 
 	};
-
-
     $.fn.remoteUploaderValidate = function(options) {
         var settings = $.extend(true,{
             mediaRequired:true,
             errorMessage:"Image required",
             classlist: "float-right text-danger error-span"
         }, options );
-
         var div_ru_dynamic = null;
         var validate_status = true;
         var form = null
-
         this.each(function() {
             var elem = $(this);
             if($(this).is('form')){
                 form = $(this);
                 div_ru_dynamic = $(elem).find('div.ru-dynamic');
             }else{
-
                  form = $(elem).closest("form");
                 div_ru_dynamic = $(elem).closest('div.ru-dynamic');
             }
-            
-
             $(div_ru_dynamic).find('input').each(function(){
                 if(!$(this).hasAttr("data-uuid")){
                     validate_status = false ;
                 }
             });
             if(!validate_status){
-           
                 let custom_file = $(div_ru_dynamic).find(".ru-custom-file");
                 let span = $('<span />', { 
                     id: '',
@@ -384,27 +346,15 @@
                let eror_span = $(div_ru_dynamic).find("span[data-ru-error]");
                $(eror_span).remove();
             }
-    
         });
-
-      
         return validate_status;
-
     };
-
 }(jQuery));
-
-
-
    var formResetInit = function(elem){
-
     let form = $(elem).closest("form");
-    
     $(form).on('reset', function(event) {
         $(form).find("div.ru-preview-img").empty();
-
         let div_ru_dynamic = $(form).find('div.ru-dynamic')
-       
         $( div_ru_dynamic ).each(function( index ) {
              $(this).find('input[data-uuid]:not(:first)').remove();
              $(this).find("input[data-uuid]").first().val("" ).removeAttr('data-uuid');
@@ -412,8 +362,6 @@
           });
     });
    }
-
-
    var mediaRequiredValidationInit = function(elem){
     let form = $(elem).closest("form");
     $(form).on('submit', function(event) {
@@ -421,11 +369,46 @@
         throw '';  
     })
    }
-
-   
-   var initilaPrviewMultipleMediaInit = function(){
+   var initilaPrviewMultipleMediaInit = function(elem, settings){
+    let mediaPreviewConfig = settings.mediaPreviewConfig;
         let ruDynamic = $(elem).closest('.ru-dynamic');
-        let dataUuid = Math.random().toString(16).slice(2);
+        let previewData = mediaPreviewConfig;
+        ruDynamic.find(".ru-preview-img").empty();
+          $.map( previewData, function( val, i ) {
+                let dataUuid = Math.random().toString(16).slice(2);
+                $(elem).val(val.key);
+                $(elem).attr("data-uuid", dataUuid);
+                let imagePreview=  $(ruDynamic).find('.ru-preview-img');
+                        let img = $('<img />', { 
+                         id: '',
+                         src:val.url,
+                         alt: 'Image',
+                         class:"mt-2 mb-2 ru-selected-media",
+                         width:"100px",
+                         height:"100px"
+                       });
+                        let imageBlockDiv = $('<div />', { 
+                            id: '',
+                            class:"ru-image-block",
+                          });
+
+                          imageBlockDiv.css({"float": "left"});
+                          imageBlockDiv.attr('data-uuid', dataUuid);
+                          imageBlockDiv.appendTo($(imagePreview));
+                        img.appendTo($(imageBlockDiv));
+                        if(val.deleteUrl !== null){
+                            $(imageBlockDiv).attr("data-delete-url", val.deleteUrl);
+                            let span = $('<span />', { 
+                            id: '',
+                            class:"float-right fs-5 ru-cursor-pointer ru-remove-media",
+                            });
+                            span.html('<i class="fa-solid fa-trash-can"></i>')
+                            span.appendTo($(imageBlockDiv));
+
+                        ajaxRemoveMediaInit();
+                        }
+          });
+        
        
     }
     var initilaPrviewSingleMediaInit = function(elem, settings){
@@ -448,10 +431,6 @@
                          width:"100px",
                          height:"100px"
                        });
-
-                     
-
-
                         let imageBlockDiv = $('<div />', { 
                             id: '',
                             class:"ru-image-block",
@@ -461,11 +440,7 @@
                           imageBlockDiv.attr('data-uuid', dataUuid);
                           imageBlockDiv.appendTo($(imagePreview));
                         img.appendTo($(imageBlockDiv));
-
-
-                        // 
                         if(settings.mediaPreviewDeleteUrl !== null){
-
                             let span = $('<span />', { 
                             id: '',
                             class:"float-right fs-5 ru-cursor-pointer ru-remove-media",
@@ -478,13 +453,57 @@
                         
     }
 
+    var ajaxRemoveMediaInit = function(){
+        $(document).off("click").on("click", ".ru-remove-media", function(){
+            let imageBlockDiv = $(this).closest('.ru-image-block');
+            let dataUuid = $(imageBlockDiv).attr('data-uuid');
+            let ruDynamic = $(this).closest('.ru-dynamic');
+            let allRelatedInputs = $(ruDynamic).find("input[data-uuid]");
+           
 
-$.fn.hasAttr = function(name) {
-    
-    let  attr =  this.attr(name) ;
-      if (typeof attr !== 'undefined' && attr !== false) {
-         return true;
-      }else{
-        return false
-      }
+            // -------------------------
+            $.ajax({
+                url:  $(imageBlockDiv).attr('data-delete-url'),
+                type: 'GET',
+                headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                beforeSend: function() {
+                  
+                },
+                success: function(response) {
+                    if(allRelatedInputs.length > 1 && settings.multipleMedia)
+                    {
+                        let slectedInput = $(ruDynamic).find(`[data-uuid='${dataUuid}']`);
+                        $(slectedInput).remove();
+                    }else if(allRelatedInputs.length == 1 && settings.multipleMedia){
+                        let slectedInput = $(ruDynamic).find(`[data-uuid='${dataUuid}']`)
+                    $(slectedInput).val("");
+                    $(slectedInput).removeAttr('data-uuid');
+                    }else if(allRelatedInputs.length == 1 && !settings.multipleMedia){
+                        let slectedInput = $(ruDynamic).find(`[data-uuid='${dataUuid}']`)
+                    $(slectedInput).val("");
+                    $(slectedInput).removeAttr('data-uuid');
+                    }
+                    // let media = $(ruDynamic).find('.ru-selected-media');
+                    $(imageBlockDiv).remove();
+                    $(this).remove();
+                  
+                },error: function (error) {
+                    throw new Error(error);
+                }
+            });
+            // -------------------------
+          });
+
+       }
+
+    $.fn.tagName = function() {
+        return this.prop("tagName");
+      };
+    $.fn.hasAttr = function(name) {
+        let  attr =  this.attr(name) ;
+        if (typeof attr !== 'undefined' && attr !== false) {
+            return true;
+        }else{
+            return false
+        }
    };

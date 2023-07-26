@@ -4,6 +4,7 @@ namespace Microoculus\AllUploads\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use File;
+use Microoculus\AllUploads\AllUploads;
 class AllUploadsServiceProvider extends ServiceProvider {
     /**
      * Bootstrap services.
@@ -51,6 +52,10 @@ class AllUploadsServiceProvider extends ServiceProvider {
         //   $this->app->singleton('alluploads', function () {
         //     return new AllUploads;
         // });
+
+        $this->app->bind('alluploads', function($app) {
+            return new AllUploads();
+        });
     }
 }
 ?>

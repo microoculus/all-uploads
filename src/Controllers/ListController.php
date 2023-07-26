@@ -22,6 +22,10 @@ class ListController extends Controller
     public function cursorpaginate(Request $request){
 
         if($request->ajax()){
+            if($request->has('user_id')){
+                $where = ['user_id'=>$request->user_id];
+            }
+
             if($request->has('filter')){
 
                 if($request->has('date_range')){
@@ -32,15 +36,15 @@ class ListController extends Controller
                     $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where);
                 }
             }else if($request->has('sorting')){
-                $uploadedMedias =  $this->uploadsService->getcursorPaginate($request->input('sorting'));
+                $uploadedMedias =  $this->uploadsService->getcursorPaginate($request->input('sorting'), $where ?? []);
             }else{
 
-                $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC");
+                $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
             }
             return  view('AllUploads::admin.list', compact('uploadedMedias'))->render();
             
         }else{
-            $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC");
+            $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
         
             return  view('AllUploads::admin.list', compact('uploadedMedias'))->render();
         }
@@ -49,6 +53,9 @@ class ListController extends Controller
     public function remoteList(Request $request){
 
         if($request->ajax()){
+            if($request->has('user_id')){
+                $where = ['user_id'=>$request->user_id];
+            }
             if($request->has('filter')){
 
                 if($request->has('date_range')){
@@ -59,15 +66,15 @@ class ListController extends Controller
                     $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where);
                 }
             }else if($request->has('sorting')){
-                $uploadedMedias =  $this->uploadsService->getcursorPaginate($request->input('sorting'));
+                $uploadedMedias =  $this->uploadsService->getcursorPaginate($request->input('sorting'), $where ?? []);
             }else{
 
-                $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC");
+                $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
             }
             return  view('AllUploads::admin.remote-list', compact('uploadedMedias'))->render();
             
         }else{
-            $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC");
+            $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
         
             return  view('AllUploads::admin.remote-list', compact('uploadedMedias'))->render();
         }

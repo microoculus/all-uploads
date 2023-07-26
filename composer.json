@@ -22,7 +22,10 @@
         "laravel": {
             "providers": [
                 "Microoculus\\AllUploads\\Providers\\AllUploadsServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "AllUploads": "Microoculus\\AllUploads\\Facades\\AllUploads"
+            }
         }
     },
     "config": {

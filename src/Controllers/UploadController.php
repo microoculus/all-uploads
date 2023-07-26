@@ -55,7 +55,11 @@ class UploadController extends Controller
 
             try { 
                 DB::beginTransaction();
-                $uploads  = $this->uploadsService->store($request, ['collection_name' => 'admin_collection', 'user_id'=> 1]);
+                $details = array_merge(
+                    ['collection_name' => 'admin_collection'],
+                    ($request->has('user_id') ? ['user_id'=>$request->user_id] : [])
+                );
+                $uploads  = $this->uploadsService->store($request, $details);
                 DB::commit();
                 return response()->json([
                     'sucess' => true,

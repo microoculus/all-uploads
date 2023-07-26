@@ -1,21 +1,38 @@
+'use strict';
+if (!window.jQuery) {
+    throw new Error("Jquery not loaded");
+}
+
+
+
 $(function() {
-    'use strict';
+    
    var csrf_token =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
    if(typeof window.all_uploads.allUploadsConf == undefined){
-    throw new Error("all up loads script error! Global function not defined");
+    throw new Error("Core script downloading error. script error! Global function not defined");
    }
- 
+
+   if (!$.fn.modal) {
+    throw new Error('Bootstrap is not loaded!');
+    }
+   uploadZoneInit();
+   allUploadedMediaLoadInit();
 
 });
+
     function uploadZoneInit(){
             const element = document.querySelector("#upload_media");
+            let extraData = {
+                '_token':document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                ...(all_uploads.allUploadsConf("user_id") && {'user_id': all_uploads.allUploadsConf("user_id")})
+            }
             if(element){
                 $(element).fileinput({
                     browseOnZoneClick: true,
                     uploadUrl: window.all_uploads.allUploadsConf('media_upload_ulr'),
                     uploadAsync:false,
                     showClose :false,
-                    uploadExtraData:{'_token':document.querySelector('meta[name="csrf-token"]').getAttribute('content')},
+                    uploadExtraData:extraData,
                 });
 
                 /**
@@ -54,10 +71,14 @@ $(function() {
     function allUploadedMediaLoadInit(){
        
         const element = document.querySelector("#all-uploaded-media");
+        let extraData = {
+            ...(all_uploads.allUploadsConf("user_id") && {'user_id': all_uploads.allUploadsConf("user_id")})
+        }
         if(element){
             $.ajax({
                 url:  window.all_uploads.allUploadsConf('media_all_uploads_url'),
                 type: 'GET',
+                data:extraData,
                 headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
                 beforeSend: function() {
                     // setting a timeout
@@ -91,7 +112,7 @@ $(function() {
                 allUploadedMediaLoadInit();
             })
         }else{
-            console.log("here")
+            // Pagination options
         }
 
     }
@@ -110,4 +131,6 @@ $(function() {
         }
     }
 
+
+    
   
