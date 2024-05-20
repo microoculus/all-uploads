@@ -3,19 +3,21 @@
 		@foreach($uploadedMedias as $thread)
 			@forelse ($thread->getMedia('admin_collection') as $media)
 				@if($media->hasGeneratedConversion('thumb'))
-					<div class="remote-uploader-item picture-item">
+					<div class="remote-uploader-item picture-item" style="position:relative;" id="media-{{$media->id}}" >
 						<a href=" {{$media->getUrl()}}" data-bs-toggle="modal" data-bs-target="#remote-uploader-modal"
 						data-details-uploaded-at="{{$carbon::parse($media->created_at)->format('F d Y')}}"
 						data-details-file-name="{{$media->file_name}}"
 						data-details-file-type="{{$media->mime_type}}"
 						data-details-file-size="{{$media->human_readable_size}}"
 						data-details-file-url="{{$media->getFullUrl()}}"
+						data-details-media-id="{{$media->id}}"
 						>
 							<img src=" {{$media->getUrl('thumb')}}" 
 							alt="{{$media->getUrl()}}"
 							class="img-fluid" />
 							
 						</a>
+						<div class="remote-uploader-item-overlay-title"><span class="remote-uploader-item-overlay-title-span">{{$media->file_name }}</span></div>
 					</div>
 				@else
 					<div class="remote-uploader-item picture-item" data-groups='["uploaded_medias"]'>

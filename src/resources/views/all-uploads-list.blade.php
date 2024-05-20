@@ -11,6 +11,8 @@
                 <div class="dropdown-menu media-sort" style="">
                     <a class="dropdown-item" data-sortingOption="ASC" href="#">Oldest to Newest</a>
 					<a class="dropdown-item"  data-sortingOption="DESC" href="#">Newest to Oldest</a>
+                    <a class="dropdown-item " data-sortingOption="NAME_ASC" href="#" >File Name ASC</a>
+					<a class="dropdown-item "  data-sortingOption="NAME_DESC" href="#" >File Name DESC</a>
                 </div>
             </div>
 		</div>
@@ -63,6 +65,7 @@
 					  <input type="text" class="form-control file-url" name="" id="" value="" readonly>
 					<a href="javascript:void(0);" class="btn btn-de-secondary url-copy"><i class="ti ti-copy menu-icon"></i></a>
 					</div>
+                    <div class="delete-button-holder"></div>
 					
 				</div>
             </div>

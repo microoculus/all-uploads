@@ -157,3 +157,22 @@
 	height: 400px;
     overflow: auto;
 }
+
+.remote-uploader-item-overlay-title {
+	position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5); 
+        color: #fff; 
+        padding: 10px;
+        box-sizing: border-box;
+}
+.remote-uploader-item-overlay-title-span {
+	overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}

@@ -79,4 +79,7 @@ class UploadController extends Controller
     }
 
 
+    public function deleteMediaById(Request $request){
+       return \AllUploads::deleteMediaById($request->mediaId);
+    }
 }

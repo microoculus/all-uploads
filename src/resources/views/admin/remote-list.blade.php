@@ -16,6 +16,8 @@
                 <div class="dropdown-menu media-sort" style="" >
                     <a class="dropdown-item " data-sortingOption="ASC" href="#" >Oldest to Newest</a>
 					<a class="dropdown-item "  data-sortingOption="DESC" href="#" >Newest to Oldest</a>
+                    <a class="dropdown-item " data-sortingOption="NAME_ASC" href="#" >File Name ASC</a>
+					<a class="dropdown-item "  data-sortingOption="NAME_DESC" href="#" >File Name DESC</a>
                 </div>
             </div>
 		</div>
@@ -29,14 +31,15 @@
 		@foreach($uploadedMedias as $thread)
 			@forelse ($thread->getMedia('admin_collection') as $media)
 				@if($media->hasGeneratedConversion('thumb'))
-					<div class="remote-uploader-item picture-item" data-groups='["uploaded_medias"]'>
-						<a href=" {{$media->getUrl()}}" class="lightbox">
+					<div class="remote-uploader-item picture-item"  data-groups='["uploaded_medias"]' >
+						<a href=" {{$media->getUrl()}}" class="lightbox"  >
 							<img src=" {{$media->getUrl('thumb')}}" 
 							alt="{{$media->getUrl()}}"
 							class="img-fluid" 
 							data-mediaid="{{$media->id}}" />
 							
 						</a>
+						<div class="remote-uploader-item-overlay-title" style=""><span class="remote-uploader-item-overlay-title-span">{{$media->file_name }}</span></div>
 					</div>
 				@else
 					<div class="remote-uploader-item picture-item" data-groups='["uploaded_medias"]'>

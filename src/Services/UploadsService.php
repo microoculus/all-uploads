@@ -26,6 +26,10 @@ class UploadsService {
 
         return $this->uploadsRepository->getFileMangerMedias(['admin_collection'], $where, $limit, $sortOrder);
     }
+
+    public function getCursorPaginationSortByName($sortOrder = "ASC", $where = [], $limit = 16){
+        return $this->uploadsRepository->sortFileMangerMediasByName(['admin_collection'], $where, $limit, $sortOrder);
+    }
     public function store(Request $request, array $details = []){
        
         $upload =  $this->uploadsRepository->store($details);
