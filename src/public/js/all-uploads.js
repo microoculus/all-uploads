@@ -123,7 +123,7 @@ $(function() {
         if(document.querySelector(".media-sort")){
             $(".media-sort").find("[data-sortingOption]").each(function(){
                 $(this).off("click").on("click",function(){
-                   let mediaAllUploadsUrl = new URL( window.all_uploads.allUploadsConf("media_all_uploads_url"));
+                   let mediaAllUploadsUrl = new URL( window.all_uploads.allUploadsConf("media_all_uploads_url").split('?')[0]);
                    mediaAllUploadsUrl.searchParams.set("sorting", $(this).attr("data-sortingOption")); 
                    mediaAllUploadsUrl = mediaAllUploadsUrl.href;
                    window.all_uploads.setAllUploadsConf("media_all_uploads_url", mediaAllUploadsUrl)

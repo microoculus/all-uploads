@@ -316,7 +316,7 @@ $.fn.remoteUploader = function(options) {
             if(document.querySelector(".media-sort")){
                 $(".media-sort").find("[data-sortingOption]").each(function(){
                     $(this).off("click").on("click",function(){
-                        ajaxLoadUrl = new URL(ajaxLoadUrl);
+                        ajaxLoadUrl = new URL(ajaxLoadUrl.split('?')[0]);
                         ajaxLoadUrl.searchParams.set("sorting", $(this).attr("data-sortingOption")); 
                         ajaxLoadUrl = ajaxLoadUrl.href;
                         ajaxRequestHandler();

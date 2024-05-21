@@ -38,11 +38,15 @@ class ListController extends Controller
             }else if($request->has('sorting')){
                 if($request->input('sorting') == "NAME_ASC"){
                     $uploadedMedias =  $this->uploadsService->getCursorPaginationSortByName("ASC", $where ?? []);
+                    return  view('AllUploads::admin.sort-name', compact('uploadedMedias'))->render();
                 }elseif($request->input('sorting') == "NAME_DESC"){
                     $uploadedMedias =  $this->uploadsService->getCursorPaginationSortByName("DESC", $where ?? []);
+                    return  view('AllUploads::admin.sort-name', compact('uploadedMedias'))->render();
                 }else{
                     $uploadedMedias =  $this->uploadsService->getcursorPaginate($request->input('sorting'), $where ?? []);
+                    
                 }
+               
             }else{
 
                 $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
@@ -72,8 +76,10 @@ class ListController extends Controller
             }else if($request->has('sorting')){
                 if($request->input('sorting') == "NAME_ASC"){
                     $uploadedMedias =  $this->uploadsService->getCursorPaginationSortByName("ASC", $where ?? []);
+                    return  view('AllUploads::admin.remote-list-sort-name', compact('uploadedMedias'))->render();
                 }elseif($request->input('sorting') == "NAME_DESC"){
                     $uploadedMedias =  $this->uploadsService->getCursorPaginationSortByName("DESC", $where ?? []);
+                    return  view('AllUploads::admin.remote-list-sort-name', compact('uploadedMedias'))->render();
                 }else{
                     $uploadedMedias =  $this->uploadsService->getcursorPaginate($request->input('sorting'), $where ?? []);
                 }
@@ -81,6 +87,8 @@ class ListController extends Controller
                 $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
             }
             return  view('AllUploads::admin.remote-list', compact('uploadedMedias'))->render();
+           
+         
         }else{
             $uploadedMedias =  $this->uploadsService->getcursorPaginate("DESC", $where ?? []);
             return  view('AllUploads::admin.remote-list', compact('uploadedMedias'))->render();
