@@ -33,6 +33,8 @@ class Uploads extends Model implements HasMedia
 
     public function registerMediaConversions(Media $media = null): void
     {
+//    	updated with ->nonQueued();
+
         $this->addMediaConversion('thumb')
               ->width(368)
               ->height(232)
